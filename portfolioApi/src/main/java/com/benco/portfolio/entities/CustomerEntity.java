@@ -3,6 +3,8 @@ package com.benco.portfolio.entities;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.UuidGenerator;
+
 import com.benco.portfolio.beans.requests.CustomerRequest;
 import com.benco.portfolio.enums.Roles;
 
@@ -38,8 +40,8 @@ public class CustomerEntity {
 	@Column(name="last_name")
 	private String lastName;
 
-	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name="job_id")
+	@UuidGenerator
 	private String jobId;
 
 	@Column(name="email_id")

@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		for (UserRoleEntity userRoleEntity : customerEntity.get().getRoles()) {
 			grantedAuthorities.add(new CustomGrantedAuthority(userRoleEntity));
 		}
-		return new CustomUserDetails(customerEntity.get().getEmailId(), customerEntity.get().getJobId(),
+		return new CustomUserDetails(customerEntity.get().getEmailId(), customerEntity.get().getJobId().toString(),
 				grantedAuthorities);
 	}
 

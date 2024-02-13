@@ -43,9 +43,8 @@ public class CustomerService {
 	}
 
 	private CustomerEntity generateNewCustomer(CustomerRequest request) {
-		return customerRepository.save(
-			new CustomerEntity(request, generateFirstRole())
-		);
+		customerRepository.saveAndFlush(new CustomerEntity(request, generateFirstRole()));
+		return customerRepository.findByEmailId(request.getEmailId()).orElseThrow();
 	}
 
 	private Set<UserRoleEntity> generateFirstRole() {

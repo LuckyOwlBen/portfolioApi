@@ -2,7 +2,10 @@ package com.benco.portfolio.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import com.benco.portfolio.beans.requests.CustomerRequest;
 import com.benco.portfolio.beans.responses.CustomerResponse;
 import com.benco.portfolio.entities.CustomerEntity;
+import com.benco.portfolio.entities.UserRoleEntity;
 import com.benco.portfolio.repositories.CustomerRepository;
+import com.benco.portfolio.repositories.UserRoleRepository;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerServiceTests {
@@ -25,11 +30,14 @@ class CustomerServiceTests {
 	@Mock
 	private CustomerRepository customerRepository;
 
+	@Mock
+	private UserRoleRepository userRoleRepository;
+
 	@Test
 	void existingCustomerInDbTest() {
 		CustomerRequest customerRequest = new CustomerRequest();
 		CustomerEntity customerEntity = new CustomerEntity();
-		when(customerRepository.findByJobId(any())).thenReturn(customerEntity);
+		when(customerRepository.findByEmailId(any())).thenReturn(Optional.of(customerEntity));
 		ResponseEntity<CustomerResponse> response = customerService.createCustomer(customerRequest);
 		assertFalse(response.getBody().isSuccess());
 	}
@@ -37,8 +45,11 @@ class CustomerServiceTests {
 	@Test
 	void nullEntityFromDbTest() {
 		CustomerRequest customerRequest = new CustomerRequest();
-		CustomerEntity customerEntity = null;
-		when(customerRepository.findByJobId(any())).thenReturn(customerEntity);
+		CustomerEntity customerEntity = new CustomerEntity();
+		Optional<CustomerEntity> mockCustomerEntity = Optional.of(customerEntity);
+		UserRoleEntity userRoleEntity = mock(UserRoleEntity.class);
+		when(userRoleRepository.save(any())).thenReturn(userRoleEntity);
+		when(customerRepository.findByEmailId(any())).thenReturn(Optional.empty()).thenReturn(mockCustomerEntity);
 		ResponseEntity<CustomerResponse> response = customerService.createCustomer(customerRequest);
 		assertTrue(response.getBody().isSuccess());
 	}
