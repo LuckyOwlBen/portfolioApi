@@ -1,22 +1,29 @@
 package com.benco.portfolio.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.benco.portfolio.beans.requests.CustomerRequest;
+import com.benco.portfolio.enums.Roles;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="customer_info")
 public class CustomerEntity {
 
-	public CustomerEntity(CustomerRequest request) {
+	public CustomerEntity(CustomerRequest request, Set<UserRoleEntity> roles) {
 		this.firstName = request.getFirstName();
 		this.lastName = request.getLastName();
-		this.jobId = request.getJobId();
+		this.emailId = request.getEmailId();
+		this.roles = roles;
 	}
 
 	public CustomerEntity() {}
@@ -31,16 +38,16 @@ public class CustomerEntity {
 	@Column(name="last_name")
 	private String lastName;
 
+	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name="job_id")
 	private String jobId;
 
-	public Long getId() {
-		return id;
-	}
+	@Column(name="email_id")
+	private String emailId;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+	@ManyToMany(fetch = FetchType.EAGER)
+	@Column(name="roles")
+	private Set<UserRoleEntity> roles = new HashSet<>();
 
 	public String getFirstName() {
 		return firstName;
@@ -66,4 +73,31 @@ public class CustomerEntity {
 		this.jobId = jobId;
 	}
 
+	public String getEmailId() {
+		return emailId;
+	}
+
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public Set<UserRoleEntity> getRoles() {
+		return roles;
+	}
+
+	public void addRole(Roles role) {
+		this.roles.add(new UserRoleEntity(role));
+	}
+
+	public void setRoles(Set<UserRoleEntity> role) {
+		this.roles = role;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 }

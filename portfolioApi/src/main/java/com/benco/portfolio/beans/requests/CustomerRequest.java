@@ -5,7 +5,7 @@ public class CustomerRequest {
 
 	private String lastName;
 
-	private String jobId;
+	private String emailId;
 
 	public String getFirstName() {
 		return firstName;
@@ -23,11 +23,11 @@ public class CustomerRequest {
 		this.lastName = lastName;
 	}
 
-	public String getJobId() {
-		return jobId;
+	public String getEmailId() {
+		return emailId;
 	}
 
-	public void setJobId(String jobId) {
-		this.jobId = jobId;
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
 	}
 }

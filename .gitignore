@@ -25,3 +25,4 @@ replay_pid*
 
 #Property Files
 application-dev.properties
+application-admin.properties

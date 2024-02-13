@@ -30,7 +30,7 @@ class CustomerServiceTests {
 		CustomerRequest customerRequest = new CustomerRequest();
 		CustomerEntity customerEntity = new CustomerEntity();
 		when(customerRepository.findByJobId(any())).thenReturn(customerEntity);
-		ResponseEntity<CustomerResponse> response = customerService.addCustomerService(customerRequest);
+		ResponseEntity<CustomerResponse> response = customerService.createCustomer(customerRequest);
 		assertFalse(response.getBody().isSuccess());
 	}
 
@@ -39,7 +39,7 @@ class CustomerServiceTests {
 		CustomerRequest customerRequest = new CustomerRequest();
 		CustomerEntity customerEntity = null;
 		when(customerRepository.findByJobId(any())).thenReturn(customerEntity);
-		ResponseEntity<CustomerResponse> response = customerService.addCustomerService(customerRequest);
+		ResponseEntity<CustomerResponse> response = customerService.createCustomer(customerRequest);
 		assertTrue(response.getBody().isSuccess());
 	}
 
