@@ -21,9 +21,8 @@ public class UserRoleEntity {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "ID")
-	private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
 	@Column(name = "name")
 	private String name;

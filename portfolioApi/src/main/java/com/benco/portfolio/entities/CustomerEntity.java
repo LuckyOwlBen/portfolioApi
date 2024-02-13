@@ -19,12 +19,11 @@ import jakarta.persistence.Table;
 @Table(name="customer_info")
 public class CustomerEntity {
 
-	public CustomerEntity(CustomerRequest request, Roles currentRole) {
+	public CustomerEntity(CustomerRequest request, Set<UserRoleEntity> roles) {
 		this.firstName = request.getFirstName();
 		this.lastName = request.getLastName();
 		this.emailId = request.getEmailId();
-		this.roles = new HashSet<>();
-		this.roles.add(new UserRoleEntity(currentRole));
+		this.roles = roles;
 	}
 
 	public CustomerEntity() {}
@@ -47,7 +46,7 @@ public class CustomerEntity {
 	private String emailId;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@Column(name="role")
+	@Column(name="roles")
 	private Set<UserRoleEntity> roles = new HashSet<>();
 
 	public String getFirstName() {

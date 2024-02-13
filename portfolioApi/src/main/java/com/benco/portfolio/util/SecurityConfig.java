@@ -35,7 +35,7 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
 				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/addCustomer")
-						.hasRole(Roles.PERSPECTIVE.name()))
+						.permitAll())
 				.csrf(csrf -> csrf.ignoringRequestMatchers("/addCustomer"))
 				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/**")
 						.hasRole(Roles.CUSTOMER.name()))
