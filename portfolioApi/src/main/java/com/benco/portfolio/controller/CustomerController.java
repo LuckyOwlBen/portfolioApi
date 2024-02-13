@@ -19,6 +19,6 @@ public class CustomerController {
 
 	@PostMapping("/addCustomer")
 	public ResponseEntity<CustomerResponse> addCustomer(@RequestBody CustomerRequest request) {
-		return customerService.addCustomerService(request);
+		return customerService.createCustomer(request);
 	}
 }
