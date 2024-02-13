@@ -1,15 +1,17 @@
 package com.benco.portfolio.beans.responses;
 
-import com.benco.portfolio.entities.CustomerEntity;
-
 public class CustomerResponse {
+
 	private boolean success;
 
 	private String jobId;
 
-	public CustomerResponse(boolean b, CustomerEntity customerEntity) {
-		this.success = b;
-		this.jobId = customerEntity.getJobId();
+	private String token;
+
+	public CustomerResponse(boolean success, String jobId, String token) {
+		this.success = success;
+		this.jobId = jobId;
+		this.token = token;
 	}
 
 	public boolean isSuccess() {
@@ -26,5 +28,13 @@ public class CustomerResponse {
 
 	public void setJobId(String jobId) {
 		this.jobId = jobId;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

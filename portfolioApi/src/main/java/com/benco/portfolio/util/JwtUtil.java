@@ -17,7 +17,7 @@ import io.jsonwebtoken.security.Keys;
 
 @Configuration
 public class JwtUtil {
-	public static final String SECRET = "357638792F423F4428472B4B6250655368566D5";
+	public static final String SECRET = "357638792F423F4428472B4B6250655368566D5C7AF1DD653357638792F423F4428472B4B6250655368566D5C7AF1DD653";
 
 	public String extractUsername(String token) {
 		return extractClaim(token, Claims::getSubject);
@@ -53,7 +53,7 @@ public class JwtUtil {
 	private String createToken(Map<String, Object> claims, String username) {
 		return Jwts.builder().setClaims(claims).setSubject(username).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1))
-				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+				.signWith(getSignKey(), SignatureAlgorithm.HS512).compact();
 	}
 
 	private Key getSignKey() {
