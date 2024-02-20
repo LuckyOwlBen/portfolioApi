@@ -15,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.benco.portfolio.enums.Roles;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -34,12 +32,16 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
-				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/addCustomer")
-						.permitAll())
-				.csrf(csrf -> csrf.ignoringRequestMatchers("/addCustomer"))
-				.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers("/**")
-						.hasRole(Roles.CUSTOMER.name()))
+				.authorizeHttpRequests(authorizeHttpRequests ->
+					authorizeHttpRequests.requestMatchers("/addCustomer")
+						.permitAll()
+				)
+				.authorizeHttpRequests(authorizeHttpRequests ->
+					authorizeHttpRequests.requestMatchers("/**")
+						.authenticated()
+				)
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).authenticationProvider(authenticationProvider())
+				.csrf(csrf -> csrf.ignoringRequestMatchers("*"))
 				.build();
 	}
 

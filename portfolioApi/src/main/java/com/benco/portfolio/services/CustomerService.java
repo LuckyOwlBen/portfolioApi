@@ -10,23 +10,37 @@ import org.springframework.stereotype.Service;
 
 import com.benco.portfolio.beans.requests.CustomerRequest;
 import com.benco.portfolio.beans.responses.CustomerResponse;
+import com.benco.portfolio.entities.AuthenticationEntity;
 import com.benco.portfolio.entities.CustomerEntity;
 import com.benco.portfolio.entities.UserRoleEntity;
 import com.benco.portfolio.enums.Roles;
+import com.benco.portfolio.repositories.AuthenticationRepository;
 import com.benco.portfolio.repositories.CustomerRepository;
 import com.benco.portfolio.repositories.UserRoleRepository;
+import com.benco.portfolio.util.JwtUtil;
 
 @Service
 public class CustomerService {
 
-	public CustomerService(CustomerRepository customerRepository, UserRoleRepository userRoleRepository) {
+	public CustomerService(
+			CustomerRepository customerRepository,
+			UserRoleRepository userRoleRepository,
+			JwtUtil jwtUtil,
+			AuthenticationRepository authenticationRepository
+		) {
 		this.customerRepository = customerRepository;
 		this.userRoleRepository = userRoleRepository;
+		this.jwtUtil = jwtUtil;
+		this.authenticationRepository = authenticationRepository;
 	}
 
 	private CustomerRepository customerRepository;
 
 	private UserRoleRepository userRoleRepository;
+
+	private AuthenticationRepository authenticationRepository;
+
+	private JwtUtil jwtUtil;
 
 	public ResponseEntity<CustomerResponse> createCustomer(CustomerRequest request) {
 		Optional<CustomerEntity> optionalCustomerEntity =
@@ -35,11 +49,20 @@ public class CustomerService {
 		CustomerEntity customerEntity = isCustomerNew
 				? generateNewCustomer(request)
 				: optionalCustomerEntity.get();
+		String jwtToken = generateAuthToken(customerEntity);
 		HttpStatus status = isCustomerNew
 				? HttpStatus.CREATED
 				: HttpStatus.CONFLICT;
 
-		 return new ResponseEntity<>(new CustomerResponse(isCustomerNew, customerEntity), status);
+		 return new ResponseEntity<>(new CustomerResponse(isCustomerNew, customerEntity.getJobId(), jwtToken), status);
+	}
+
+	private String generateAuthToken(CustomerEntity customerEntity) {
+		return authenticationRepository
+				.save(new AuthenticationEntity(customerEntity, jwtUtil
+						.generateToken(customerEntity
+								.getEmailId())))
+				.getJwtKey(); 		
 	}
 
 	private CustomerEntity generateNewCustomer(CustomerRequest request) {
