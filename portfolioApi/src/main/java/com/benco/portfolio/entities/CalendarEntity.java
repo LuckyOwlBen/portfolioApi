@@ -1,6 +1,8 @@
 package com.benco.portfolio.entities;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -115,5 +117,18 @@ public class CalendarEntity {
 			case 4: return getEvening() == null;
 			default: return false;
 		}
+	}
+
+	private int availibilityAsInt(int timeslot) {
+		return checkAvailability(timeslot) ? 0 : 1;
+	}
+
+	public Map<Integer, Integer> getAvailabilityBitMap() {
+		Map<Integer, Integer> bitmap = new HashMap<>();
+		bitmap.put(1, availibilityAsInt(1));
+		bitmap.put(2, availibilityAsInt(2));
+		bitmap.put(3, availibilityAsInt(3));
+		bitmap.put(4, availibilityAsInt(4));
+		return bitmap;
 	}
 }
