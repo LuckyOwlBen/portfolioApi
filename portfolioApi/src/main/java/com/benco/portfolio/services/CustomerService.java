@@ -1,6 +1,7 @@
 package com.benco.portfolio.services;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ import com.benco.portfolio.repositories.AuthenticationRepository;
 import com.benco.portfolio.repositories.CustomerRepository;
 import com.benco.portfolio.repositories.UserRoleRepository;
 import com.benco.portfolio.util.JwtUtil;
+
+import jakarta.persistence.NonUniqueResultException;
 
 @Service
 public class CustomerService {
@@ -58,14 +61,16 @@ public class CustomerService {
 	}
 
 	private String generateAuthToken(CustomerEntity customerEntity) {
-		return authenticationRepository
-				.save(new AuthenticationEntity(customerEntity, jwtUtil
-						.generateToken(customerEntity
-								.getEmailId())))
-				.getJwtKey(); 		
+		AuthenticationEntity authenticationEntity = authenticationRepository.findByCustomerReference(customerEntity);
+		if (authenticationEntity == null) {
+			return authenticationRepository
+					.save(new AuthenticationEntity(customerEntity, jwtUtil.generateToken(customerEntity.getEmailId())))
+					.getJwtKey();
+		}
+		return authenticationEntity.getJwtKey();
 	}
 
-	private CustomerEntity generateNewCustomer(CustomerRequest request) {
+	private CustomerEntity generateNewCustomer(CustomerRequest request) throws NonUniqueResultException, NoSuchElementException {
 		customerRepository.saveAndFlush(new CustomerEntity(request, generateFirstRole()));
 		return customerRepository.findByEmailId(request.getEmailId()).orElseThrow();
 	}

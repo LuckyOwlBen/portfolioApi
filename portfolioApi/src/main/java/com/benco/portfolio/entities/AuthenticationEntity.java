@@ -20,6 +20,8 @@ public class AuthenticationEntity {
 		this.expired = false;
 	}
 
+	public AuthenticationEntity() {}
+
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
