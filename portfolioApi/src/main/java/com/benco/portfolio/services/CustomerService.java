@@ -6,8 +6,10 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.benco.portfolio.beans.requests.CustomerRequest;
 import com.benco.portfolio.beans.responses.CustomerResponse;
@@ -46,18 +48,18 @@ public class CustomerService {
 	private JwtUtil jwtUtil;
 
 	public ResponseEntity<CustomerResponse> createCustomer(CustomerRequest request) {
-		Optional<CustomerEntity> optionalCustomerEntity =
-				customerRepository.findByEmailId(request.getEmailId());
-		boolean isCustomerNew = optionalCustomerEntity.isEmpty();
-		CustomerEntity customerEntity = isCustomerNew
-				? generateNewCustomer(request)
-				: optionalCustomerEntity.get();
-		String jwtToken = generateAuthToken(customerEntity);
-		HttpStatus status = isCustomerNew
-				? HttpStatus.CREATED
-				: HttpStatus.CONFLICT;
-
-		 return new ResponseEntity<>(new CustomerResponse(isCustomerNew, customerEntity.getJobId(), jwtToken), status);
+		customerRepository
+			.findByEmailId(request.getEmailId())
+			.stream()
+			.findFirst()
+			.map(existingCustomer -> {
+				throw new ResponseStatusException(
+					HttpStatus.CONFLICT,
+					"Customer already exists"
+				);
+			});
+		CustomerEntity customerEntity = generateNewCustomer(request);
+		return new ResponseEntity<CustomerResponse>(new CustomerResponse(customerEntity.getJobId(), generateAuthToken(customerEntity)), HttpStatus.CREATED);
 	}
 
 	private String generateAuthToken(CustomerEntity customerEntity) {
@@ -72,7 +74,12 @@ public class CustomerService {
 
 	private CustomerEntity generateNewCustomer(CustomerRequest request) throws NonUniqueResultException, NoSuchElementException {
 		customerRepository.saveAndFlush(new CustomerEntity(request, generateFirstRole()));
-		return customerRepository.findByEmailId(request.getEmailId()).orElseThrow();
+		return customerRepository.findByEmailId(request.getEmailId())
+			.stream()
+			.findFirst()
+			.map(customer -> customer)
+			.orElseThrow()
+			.orElseThrow();
 	}
 
 	private Set<UserRoleEntity> generateFirstRole() {

@@ -2,24 +2,13 @@ package com.benco.portfolio.beans.responses;
 
 public class CustomerResponse {
 
-	private boolean success;
-
 	private String jobId;
 
 	private String token;
 
-	public CustomerResponse(boolean b, String jobId, String token) {
-		this.success = b;
+	public CustomerResponse(String jobId, String token) {
 		this.jobId = jobId;
 		this.token = token;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
-
-	public void setSuccess(boolean success) {
-		this.success = success;
 	}
 
 	public String getJobId() {
