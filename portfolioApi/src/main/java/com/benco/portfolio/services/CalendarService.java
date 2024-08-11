@@ -78,7 +78,7 @@ public class CalendarService {
 		List<String> brokenDate = Arrays.asList(date.split("/"));
 		List<Integer> convertedDate = new ArrayList<>();
 		for(String dateSegment: brokenDate) {
-			convertedDate.add(Integer.decode(dateSegment));
+			convertedDate.add(Integer.parseInt(dateSegment));
 		}
 		return convertedDate;
 	}
