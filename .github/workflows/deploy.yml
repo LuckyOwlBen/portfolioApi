@@ -39,4 +39,4 @@ jobs:
             --cluster my-cluster \
             --service my-service \
             --force-new-deployment \
-            --region ${{ secrets.AWS_REGION }}
+            --region us-east-1
