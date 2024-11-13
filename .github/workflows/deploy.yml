@@ -44,7 +44,7 @@ jobs:
       # Deploy to ECS
       - name: Deploy to ECS
         run: |
-          aws ecs update-service \
+          aws ecs UpdateServicePrimaryTaskSet \
             --cluster my-cluster \
             --service portfolioapi-service \
             --force-new-deployment \
