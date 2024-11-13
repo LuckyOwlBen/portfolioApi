@@ -46,6 +46,6 @@ jobs:
         run: |
           aws ecs update-service \
             --cluster my-cluster \
-            --service my-service \
+            --service portfolioapi-service \
             --force-new-deployment \
             --region ${{ secrets.AWS_REGION }}
