@@ -38,7 +38,7 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
 				.authorizeHttpRequests(authorizeHttpRequests ->
-					authorizeHttpRequests.requestMatchers("/addCustomer")
+					authorizeHttpRequests.requestMatchers("/addCustomer", "/healthCheck")
 						.permitAll()
 				).cors(cors -> cors.configurationSource(corsConfigurationSource()))
 				.authorizeHttpRequests(authorizeHttpRequests ->
